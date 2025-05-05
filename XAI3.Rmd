@@ -68,3 +68,31 @@ ggplot(pdp_2d, aes(x = temp_real, y = hum_real, fill = yhat)) +
   theme_minimal()
 ```
 
+## 3. PDP to explain the price of a house. 
+A random sample of 3000 rows is selected from the housing dataset to fit a random forest model and generate partial dependence plots explaining the predicted house price.
+```{r}
+house_data <- read_csv("kc_house_data.csv",show_col_types = FALSE)
+selected_cols <- house_data %>%
+  select(price, bedrooms, bathrooms, sqft_living, sqft_lot, floors, yr_built)
+set.seed(123)
+sample_house <- selected_cols %>% sample_n(3000)
+rf_house <- randomForest(price ~ ., data = sample_house, ntree = 100)
+```
+
+The following row of PDPs illustrates how bedrooms, bathrooms, living area, and number of floors influence the predicted house price.
+```{r}
+pdp_bedrooms <- partial(rf_house, pred.var = "bedrooms", grid.resolution = 20)
+plot_bedrooms <- autoplot(pdp_bedrooms) + ggtitle("Bedrooms")
+
+pdp_bathrooms <- partial(rf_house, pred.var = "bathrooms", grid.resolution = 20)
+plot_bathrooms <- autoplot(pdp_bathrooms) + ggtitle("Bathrooms")
+
+pdp_sqft <- partial(rf_house, pred.var = "sqft_living", grid.resolution = 20)
+plot_sqft <- autoplot(pdp_sqft) + ggtitle("Sqft Living")
+
+pdp_floors <- partial(rf_house, pred.var = "floors", grid.resolution = 20)
+plot_floors <- autoplot(pdp_floors) + ggtitle("Floors")
+
+plot_bedrooms + plot_bathrooms + plot_sqft + plot_floors
+```
+
