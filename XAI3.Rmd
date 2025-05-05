@@ -1,0 +1,46 @@
+---
+title: "XAI3"
+author: "G3"
+date: "2025-05-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The dataset is loaded and the necessary libraries for random forest modeling and PDP visualization are imported.
+```{r, warning=FALSE}
+library(randomForest)
+library(pdp)
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(patchwork)
+data <- read_csv("model_data.csv", show_col_types = FALSE)
+```
+
+## 1. One dimensional Partial Dependence Plot. 
+A random forest model is trained to predict bike rental counts using all available features.
+```{r}
+rf_model <- randomForest(cnt ~ ., data = data, ntree = 100, importance = TRUE)
+```
+
+The following row of partial dependence plots illustrates the individual effects of days since 2011, temperature, humidity, and wind speed on predicted bike rental counts.
+
+```{r}
+pdp_days <- partial(rf_model, pred.var = "days_since_2011", grid.resolution = 20)
+plot_days <- autoplot(pdp_days) + ggtitle("Days since 2011")
+
+pdp_temp <- partial(rf_model, pred.var = "temp_real", grid.resolution = 20)
+plot_temp <- autoplot(pdp_temp) + ggtitle("Temperature")
+
+pdp_humidity <- partial(rf_model, pred.var = "hum_real", grid.resolution = 20)
+plot_humidity <- autoplot(pdp_humidity) + ggtitle("Humidity")
+
+pdp_windspeed <- partial(rf_model, pred.var = "windspeed_real", grid.resolution = 20)
+plot_windspeed <- autoplot(pdp_windspeed) + ggtitle("Wind Speed")
+
+plot_days + plot_temp + plot_humidity + plot_windspeed
+```
+
