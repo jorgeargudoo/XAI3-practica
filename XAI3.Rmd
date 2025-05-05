@@ -30,16 +30,16 @@ The following row of partial dependence plots illustrates the individual effects
 
 ```{r}
 pdp_days <- partial(rf_model, pred.var = "days_since_2011", grid.resolution = 20)
-plot_days <- autoplot(pdp_days) + ggtitle("Days since 2011")
+plot_days <- autoplot(pdp_days) + ggtitle("Days since 2011") + ylab("cnt")
 
 pdp_temp <- partial(rf_model, pred.var = "temp_real", grid.resolution = 20)
-plot_temp <- autoplot(pdp_temp) + ggtitle("Temperature")
+plot_temp <- autoplot(pdp_temp) + ggtitle("Temperature") + ylab("cnt")
 
 pdp_humidity <- partial(rf_model, pred.var = "hum_real", grid.resolution = 20)
-plot_humidity <- autoplot(pdp_humidity) + ggtitle("Humidity")
+plot_humidity <- autoplot(pdp_humidity) + ggtitle("Humidity") + ylab("cnt")
 
 pdp_windspeed <- partial(rf_model, pred.var = "windspeed_real", grid.resolution = 20)
-plot_windspeed <- autoplot(pdp_windspeed) + ggtitle("Wind Speed")
+plot_windspeed <- autoplot(pdp_windspeed) + ggtitle("Wind Speed") + ylab("cnt")
 
 plot_days + plot_temp + plot_humidity + plot_windspeed
 ```
@@ -82,16 +82,16 @@ rf_house <- randomForest(price ~ ., data = sample_house, ntree = 100)
 The following row of PDPs illustrates how bedrooms, bathrooms, living area, and number of floors influence the predicted house price.
 ```{r}
 pdp_bedrooms <- partial(rf_house, pred.var = "bedrooms", grid.resolution = 20)
-plot_bedrooms <- autoplot(pdp_bedrooms) + ggtitle("Bedrooms")
+plot_bedrooms <- autoplot(pdp_bedrooms) + ggtitle("Bedrooms")+ ylab("price")
 
 pdp_bathrooms <- partial(rf_house, pred.var = "bathrooms", grid.resolution = 20)
-plot_bathrooms <- autoplot(pdp_bathrooms) + ggtitle("Bathrooms")
+plot_bathrooms <- autoplot(pdp_bathrooms) + ggtitle("Bathrooms")+ ylab("price")
 
 pdp_sqft <- partial(rf_house, pred.var = "sqft_living", grid.resolution = 20)
-plot_sqft <- autoplot(pdp_sqft) + ggtitle("Sqft Living")
+plot_sqft <- autoplot(pdp_sqft) + ggtitle("Sqft Living")+ ylab("price")
 
 pdp_floors <- partial(rf_house, pred.var = "floors", grid.resolution = 20)
-plot_floors <- autoplot(pdp_floors) + ggtitle("Floors")
+plot_floors <- autoplot(pdp_floors) + ggtitle("Floors")+ ylab("price")
 
 plot_bedrooms + plot_bathrooms + plot_sqft + plot_floors
 ```
