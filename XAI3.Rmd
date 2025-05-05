@@ -44,3 +44,27 @@ plot_windspeed <- autoplot(pdp_windspeed) + ggtitle("Wind Speed")
 plot_days + plot_temp + plot_humidity + plot_windspeed
 ```
 
+## 2. Bidimensional Partial Dependency Plot. 
+A random sample of 50 rows is extracted from the dataset to generate a 2D Partial Dependence Plot showing how humidity and temperature affect bike rental predictions.
+```{r}
+set.seed(123)
+
+sample_data <- data %>% sample_n(50)
+
+rf_sample <- randomForest(cnt ~ ., data = sample_data, ntree = 100)
+
+pdp_2d <- partial(rf_sample,
+                  pred.var = c("hum_real", "temp_real"),
+                  grid.resolution = 20,
+                  progress = "none")
+
+ggplot(pdp_2d, aes(x = temp_real, y = hum_real, fill = yhat)) +
+  geom_tile(width = 1, height = 1) +
+  scale_fill_viridis_c() +
+  labs(title = "2D Partial Dependence Plot",
+       x = "Temperature",
+       y = "Humidity",
+       fill = "Predicted Bike Rentals") +
+  theme_minimal()
+```
+
